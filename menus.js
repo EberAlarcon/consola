@@ -93,9 +93,6 @@ const sesionSuper =[/* vector de preguntas menu */
 
   ]
 }
-
-
-
 ];
 
 const Registro =[/* vector de preguntas menu */
@@ -215,6 +212,44 @@ const Menucliente = async(usuarios)=>{
   return opciones
 
 }
+
+const MenuAdmin = async(usuarios)=>{
+  console.clear();
+  const {opciones} = await inquerer.prompt([/* vector de preguntas menu */
+  {
+    type: "list",
+    name: "opciones",
+    message: `Bienvenido Administrador/a ${usuarios[0].Usuario}\n Estas son las opciones que pueden realizar\n`,
+    loop : true,
+    choices: [
+      {
+        value: "1",
+        name: `${"1.".blue}) Agregar sala`,
+      },
+      {
+        value: "2",
+        name: `${"2.".blue}) Eliminar sala `,
+      },
+     
+      {
+        value: "3",
+        name: `${"3.".red}) Editar sala`,
+      },
+      
+      {
+        value: "4",
+        name: `${"4.".red}) CERRAR  SESION`,
+      }
+
+
+    ]
+  }
+])
+
+  return opciones
+
+}
+
 const Sesion = async()=>{
   
   const description = await inquerer.prompt([
@@ -292,6 +327,32 @@ const Registrar = async()=>{
               message: 'Ingrese una Contraseña:',
               default: ''
             },
+    ])
+  
+    
+    return description
+  
+  }
+
+  const OpcionesAdmin = async()=>{
+  
+    const description = await inquerer.prompt([
+        {
+            name: 'Direccion',
+            message: 'Ingrese la direccion:',
+            default: ''
+          },
+          {
+            name: 'capacidad',
+            message: 'Ingrese la capacidad o espacio:',
+            default: ''
+          },
+          {
+            name: 'Precio',
+            message: 'Ingrese el precio:',
+            default: ''
+          },
+         
     ])
   
     
@@ -425,7 +486,20 @@ for (i=0; i<mensaje.length; i++){
 }
 
 
-
+const listaSala= async()=>{
+  const tasks = await Salas.find().lean();
+  console.table(tasks.map(sala =>({
+      _id: sala._id.toString(),
+      capacidad: sala.capacidad,
+      Precio: sala.Precio,
+      Direccion: sala.Direccion,
+      Estado: sala.Estado,
+  })));
+  //Para finalizar una tarea
+  await connection.close();
+  //llamar desde process que es un objeto de node
+  process.exit(0);
+};
 
 const ListaBuscar= async(salas)=>{
   console.table(salas.map(sala =>({
@@ -441,6 +515,6 @@ const ListaBuscar= async(salas)=>{
   process.exit(0);
 };
 module.exports = {menu,TipoUsuario,Sesion,Menucliente,pausa,Registrar,Buscamos,ListaBuscar,
-  VerSala,VerReserva,Pago
+  VerSala,VerReserva,Pago, MenuAdmin, OpcionesAdmin, listaSala
  
 };
